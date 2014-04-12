@@ -45,15 +45,8 @@
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="62dp"
-        android:text="Login" />
+        android:text="Login"
+        android:onClick="login" />
 
-    <Button
-        android:id="@+id/Button01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/login"
-        android:layout_alignBottom="@+id/login"
-        android:layout_alignLeft="@+id/login"
-        android:text="Login" />
-
+    
 </RelativeLayout>

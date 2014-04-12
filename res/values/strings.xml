@@ -5,6 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="display">Welcome to secure Login!!!</string>
+    <string name="changePassword">Change Password</string>
+    <string name="LogOff">Log Off</string>
+    <string name="Generate">Generate</string>
     
 
 </resources>
