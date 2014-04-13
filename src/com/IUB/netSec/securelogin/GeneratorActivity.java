@@ -4,21 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.InvalidKeyException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -53,7 +47,7 @@ public class GeneratorActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_generator_new);
-		
+
 		userDataSource = new UserDataSource(this);
 		intent  = getIntent();
 		if(intent.getBooleanExtra("isLoggedIn",false)!= true)
@@ -122,7 +116,7 @@ public class GeneratorActivity extends Activity{
 			Log.e("log_tag", "Error converting result "+e1.toString());
 		}
 
-		*//**********************/
+		 *//**********************/
 	}
 	public void getPassphrase(String username) {
 		// TODO Auto-generated method stub
@@ -158,27 +152,22 @@ public class GeneratorActivity extends Activity{
 					}
 				}
 				String jsonStr = sb.toString(); //take the string you built place in a string
-				//Log.e("log_tag", "results	 "+jsonStr.toString());
-				//JSONObject rec = new JSONObject(jsonStr);
-				//String longitudecord = rec.getString("lon");
-				//String latitudecord = rec.getString("lat");
-				// ...
 				JSONArray jArray; 
 				try{
 					jArray = new JSONArray(jsonStr);
 					JSONObject json_data=null;
-					
+
 					for(int i=0;i<jArray.length();i++){
 						json_data = jArray.getJSONObject(i);
 						Log.e("Syso", json_data.getString("passphrase"));
 						passphrase=json_data.getString("passphrase");
 					}
-			}
+				}
 				catch(Exception e){
 					e.printStackTrace();
 				}
-					
-				}
+
+			}
 		}
 		catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -344,8 +333,8 @@ public class GeneratorActivity extends Activity{
 	}
 	public void generate(View view){
 		final String username = intent.getStringExtra("userId");
-		Long timeStamp = System.currentTimeMillis();
-		Long otp = 0l;
+		Long timeStamp = System.currentTimeMillis()/1000l;
+		String otp = "";
 		try {
 			otpTextView.setText("before clicked");
 			otpTextView.post(new Runnable() {
@@ -355,8 +344,8 @@ public class GeneratorActivity extends Activity{
 					generate.setEnabled(true);
 					//setOtp(0l, username);
 					try {
-						Thread.sleep(20000);
-						setOtp(0L, username);
+						Thread.sleep(4000);
+						//setOtp("0", username);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -369,24 +358,49 @@ public class GeneratorActivity extends Activity{
 			Toast.makeText(getApplicationContext(),"Some exception in thread", Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		}
-		otp = getTimeStamp(username , timeStamp);
+		otp = getOTP(username , timeStamp);
 		otpTextView.setText(otp.toString());
 		//generate.setClickable(false);
 		generate.setEnabled(false);
-		setOtp(otp,username);
+		//setOtp(otp,username);
 		//Toast.makeText(getApplicationContext(), System.currentTimeMillis()+" generate clicked for "+username, Toast.LENGTH_LONG).show();
 
 	}
-	public Long getTimeStamp(String username, Long timeStamp) {
+	public String getOTP(String username, Long timeStamp) {
 		// TODO Auto-generated method stub
-		StringBuilder sb = new StringBuilder();
+
+		/*StringBuilder sb = new StringBuilder();
 		//System.out.println(username.toCharArray());
 		for (char c : username.toCharArray())
 			sb.append((int)c);
 		Long toReturn = timeStamp % Long.parseLong(sb.toString());
-		return (toReturn);
+		return (toReturn);*/
+		String data = username+timeStamp;
+		String otp = hash_HMAC("md5", data, passphrase);
+		return otp;
 	}
-	public void setOtp(Long otp, String user) {
+	public String hash_HMAC(String string, String data, String passphrase_local) {
+		// TODO Auto-generated method stub
+		SecretKeySpec keySpec = new SecretKeySpec(passphrase_local.getBytes(), "HmacMD5");
+		StringBuilder sb=null;
+		try{
+		Mac mac = Mac.getInstance("HmacMD5");
+		mac.init(keySpec);
+		byte[] digest = mac.doFinal(data.getBytes());
+		sb = new StringBuilder(digest.length*2);
+		String s;
+		for (byte b : digest){
+			s = Integer.toHexString(0xFF & b);
+			if(s.length() == 1) sb.append('0');
+			sb.append(s);
+		}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	public void setOtp(String otp, String user) {
 		// TODO Auto-generated method stub
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/changeOtp.php");
