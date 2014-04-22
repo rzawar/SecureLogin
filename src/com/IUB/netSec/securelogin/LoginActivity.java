@@ -84,7 +84,7 @@ public class LoginActivity extends Activity {
 		try{
 			list = new ArrayList<NameValuePair>();
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://10.0.2.2:8080/users.php");
+			HttpPost httppost = new HttpPost("http://10.0.2.2:8080/NetSecWebFiles/usersAndroidAuthenticate.php");
 			httppost.setEntity(new UrlEncodedFormEntity(list));
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity entity = response.getEntity();

@@ -1,24 +1,53 @@
 <?php
 
-$passphrase = "vB3c56Rln726aGi0";
-$userName= "adatar";
 
 $currentTime = intval(time()/30);
 $currentTimeWLag = intval(time()/30)-1;
 
+$genToken ='';
+$genTokenWLag ='';
 
-//echo $currentTime;
+function generateTokens($userN, $passp)
+{
+	global $currentTime;
+	global $currentTimeWLag;
 
-$data = $userName . $currentTime;
-$dataWlag = $userName . $currentTimeWlag;
+	$passphrase = $passp;
+	$userName = $userN;
 
-//echo $data;
+	$data = $userName . $currentTime;
+	$dataWlag = $userName . $currentTimeWlag;
 
-$bigHash = hash_hmac ("md5" , "rohit" ,"rohit");
-$bigHashWLag = hash_hmac ("md5" , $dataWLag , $passphrase);
+	$bigHash = hash_hmac("md5" , $data , $passphrase);
+	$bigHashWLag = hash_hmac("md5" , $dataWLag , $passphrase);
 
-echo $bigHash . "<BR>";
-echo $bigHashWLag;
+	$hashSplitArray = str_split ($bigHash);
+	$hashSplitArrayWL = str_split ($bigHashWLag);
 
+	global $genToken;
+	$genToken = extractTokens($hashSplitArray);
+
+	global $genTokenWLag;
+	$genTokenWLag = extractTokens($hashSplitArrayWL);
+
+}
+
+
+function extractTokens($hashArray)
+{
+	$token ='';
+	$count = 0;
+	foreach($hashArray as $ch) {
+
+		if($ch >= '0' && $ch <= '9'){
+			$tokn = $tokn . $ch;
+			$count++;
+		}
+		if ($count == 6)
+			break;
+	
+	}
+	return $tokn;
+}
 
 ?>

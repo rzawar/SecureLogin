@@ -121,7 +121,7 @@ public class GeneratorActivity extends Activity{
 	public void getPassphrase(String username) {
 		// TODO Auto-generated method stub
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/GetPassPhrase.php");
+		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/NetSecWebFiles/GetPassPhraseAndroid.php");
 		JSONObject json = new JSONObject();
 		try {           
 			json.put("userId", username);//place each of the strings as you did in postData method
@@ -164,6 +164,7 @@ public class GeneratorActivity extends Activity{
 					}
 				}
 				catch(Exception e){
+					Log.e("Syso", jsonStr);
 					e.printStackTrace();
 				}
 
@@ -276,7 +277,7 @@ public class GeneratorActivity extends Activity{
 	private boolean changePasword(String user, String password) {
 		// TODO Auto-generated method stub
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/changePassword.php");
+		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/NetSecWebFiles/changePasswordAndroid.php");
 		JSONObject json = new JSONObject();
 		try {           
 			json.put("userId", user);//place each of the strings as you did in postData method
@@ -333,7 +334,7 @@ public class GeneratorActivity extends Activity{
 	}
 	public void generate(View view){
 		final String username = intent.getStringExtra("userId");
-		Long timeStamp = System.currentTimeMillis()/1000l;
+		Long timeStamp = System.currentTimeMillis()/30000l;
 		String otp = "";
 		try {
 			otpTextView.setText("before clicked");
@@ -344,7 +345,7 @@ public class GeneratorActivity extends Activity{
 					generate.setEnabled(true);
 					//setOtp(0l, username);
 					try {
-						Thread.sleep(4000);
+						Thread.sleep(30000);
 						//setOtp("0", username);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -358,15 +359,31 @@ public class GeneratorActivity extends Activity{
 			Toast.makeText(getApplicationContext(),"Some exception in thread", Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		}
-		otp = getOTP(username , timeStamp);
-		otpTextView.setText(otp.toString());
+		otp = getOTP(username+timeStamp , passphrase);
+		String numberFromOTP  = getNumbersFromOTP(otp.toString());
+		otpTextView.setText(numberFromOTP);
 		//generate.setClickable(false);
 		generate.setEnabled(false);
 		//setOtp(otp,username);
 		//Toast.makeText(getApplicationContext(), System.currentTimeMillis()+" generate clicked for "+username, Toast.LENGTH_LONG).show();
 
 	}
-	public String getOTP(String username, Long timeStamp) {
+	public String getNumbersFromOTP(String otp) {
+		// TODO Auto-generated method stub
+		StringBuffer numbers = new StringBuffer();
+		char[] charArray = otp.toCharArray();
+		int count = 0;
+		for(char c : charArray){
+			if(c >= '0' && c<= '9'){
+				numbers.append(c);
+				count++;
+			}
+			if(count == 6)
+				break;
+		}
+		return numbers.toString();
+	}
+	public String getOTP(String usernametimestamp, String passphraseDB) {
 		// TODO Auto-generated method stub
 
 		/*StringBuilder sb = new StringBuilder();
@@ -375,8 +392,7 @@ public class GeneratorActivity extends Activity{
 			sb.append((int)c);
 		Long toReturn = timeStamp % Long.parseLong(sb.toString());
 		return (toReturn);*/
-		String data = username+timeStamp;
-		String otp = hash_HMAC("md5", data, passphrase);
+		String otp = hash_HMAC("md5",usernametimestamp, passphraseDB);
 		return otp;
 	}
 	public String hash_HMAC(String string, String data, String passphrase_local) {
@@ -384,23 +400,23 @@ public class GeneratorActivity extends Activity{
 		SecretKeySpec keySpec = new SecretKeySpec(passphrase_local.getBytes(), "HmacMD5");
 		StringBuilder sb=null;
 		try{
-		Mac mac = Mac.getInstance("HmacMD5");
-		mac.init(keySpec);
-		byte[] digest = mac.doFinal(data.getBytes());
-		sb = new StringBuilder(digest.length*2);
-		String s;
-		for (byte b : digest){
-			s = Integer.toHexString(0xFF & b);
-			if(s.length() == 1) sb.append('0');
-			sb.append(s);
-		}
+			Mac mac = Mac.getInstance("HmacMD5");
+			mac.init(keySpec);
+			byte[] digest = mac.doFinal(data.getBytes());
+			sb = new StringBuilder(digest.length*2);
+			String s;
+			for (byte b : digest){
+				s = Integer.toHexString(0xFF & b);
+				if(s.length() == 1) sb.append('0');
+				sb.append(s);
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 		return sb.toString();
 	}
-	public void setOtp(String otp, String user) {
+	/*public void setOtp(String otp, String user) {
 		// TODO Auto-generated method stub
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httppost = new HttpGet("http://10.0.2.2:8080/changeOtp.php");
@@ -456,6 +472,6 @@ public class GeneratorActivity extends Activity{
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }
