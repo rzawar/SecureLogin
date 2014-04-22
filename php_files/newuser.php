@@ -1,6 +1,7 @@
 <html>
 <head>
 <title> SecureLogin | Login Page </title>
+
 </head>
 
 <body>
@@ -29,14 +30,18 @@ table.center { margin-left:auto; margin-right:auto; }
 <tr><td>First Name:</td><td><input type="text" name="fname"></td></tr>
 <tr><td>Last Name:</td><td><input type="text" name="lname"></td></tr>
 <tr><td>Desired Username:</td><td><input type="text" name="username"></td></tr>
-<tr><td>Password:</td><td><input type="password" name="password"></td></tr>
-<tr><td>Retype Password:</td><td><input type="password" name="rpassword"></td></tr>
+<tr><td>Password:</td><td><input type="password" name="password" onKeyUp="verify.check()"></td></tr>
+<tr><td>Retype Password:</td><td><input type="password" name="rpassword" ></td></tr>
+<tr><td>Password for App:</td><td><input type="password" name="password_app" ></td></tr>
+<tr><td>Retype Password for App:</td><td><input type="password" name="rpassword_app"></td></tr>
+<tr><td><DIV ID="password_result">&nbsp;</DIV></td></tr>
 
 <tr><td>&nbsp;</td><td><input type="submit" value="Login"></td></tr>
 <tr><td colspan=2>&nbsp;</td></tr>
 </table>
 </form>
 </div></div></div>
+
 
 </body>
 </html>

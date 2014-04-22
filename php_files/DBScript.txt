@@ -1,0 +1,12 @@
+CREATE DATABASE `securelogin` /*!40100 DEFAULT CHARACTER SET latin1 */;
+Use securelogin;
+CREATE TABLE `users` (
+ `fname` varchar(20) NOT NULL,
+ `lname` varchar(20) NOT NULL,
+ `username` varchar(20) NOT NULL,
+ `password` varchar(20) NOT NULL,
+ `passphrase` varchar(20) NOT NULL,
+ `password_app` varchar(20) NOT NULL,
+ PRIMARY KEY (`username`),
+ UNIQUE KEY `Passphrase` (`passphrase`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

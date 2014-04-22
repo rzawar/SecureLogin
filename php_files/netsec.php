@@ -16,7 +16,7 @@ function generateTokens($userN, $passp)
 	$userName = $userN;
 
 	$data = $userName . $currentTime;
-	$dataWlag = $userName . $currentTimeWlag;
+	$dataWLag = $userName . $currentTimeWLag;
 
 	$bigHash = hash_hmac("md5" , $data , $passphrase);
 	$bigHashWLag = hash_hmac("md5" , $dataWLag , $passphrase);
@@ -40,14 +40,14 @@ function extractTokens($hashArray)
 	foreach($hashArray as $ch) {
 
 		if($ch >= '0' && $ch <= '9'){
-			$tokn = $tokn . $ch;
+			$token = $token . $ch;
 			$count++;
 		}
 		if ($count == 6)
 			break;
 	
 	}
-	return $tokn;
+	return $token;
 }
 
 ?>

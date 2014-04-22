@@ -121,7 +121,7 @@ public class LoginActivity extends Activity {
 			for(int i=0;i<jArray.length();i++){
 				json_data = jArray.getJSONObject(i);
 				fd_id=json_data.getString("username");
-				fd_name=json_data.getString("password");
+				fd_name=json_data.getString("password_app");
 				if(user.equals(fd_id) && password.equals(fd_name))
 					return true;	
 			}

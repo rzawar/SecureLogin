@@ -7,7 +7,7 @@ $username = $_POST["username"];
 $password = $_POST["password"];
 $token= $_POST["token"];
 
-include "./connect.php";
+include "connect.php";
 
 
 $sql ="SELECT * FROM users WHERE username='$username'";
@@ -18,12 +18,12 @@ $count=mysqli_num_rows($result);
 if($count==1){
 	$row = mysqli_fetch_array($result);
 	
-	include "./netsec.php";
+	include "netsec.php";
 	
 	generateTokens($username, $row['passphrase']);
 	
     if ($password == $row['password'] && ($token == $genToken || $token == $genTokenWLag)){
-        echo "Login Successful";
+        echo "<h1>Login Successful</h1>";
     }
     else {
         echo "Wrong Username or Passwordd";

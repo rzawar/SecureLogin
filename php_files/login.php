@@ -22,7 +22,7 @@ table.center { margin-left:auto; margin-right:auto; }
 .error { font-family: verdana,arial; color: #000000; font-size: 1.00em; }
 </style>
 
-<form method="post" action="/securelogin/authenticate.php" name="aform" target="_top">
+<form method="post" action="authenticate.php" name="aform" target="_top">
 
 <input type="hidden" name="action" value="login">
 <input type="hidden" name="hide" value="">
@@ -35,7 +35,7 @@ table.center { margin-left:auto; margin-right:auto; }
 <tr><td colspan=2>&nbsp;</td></tr>
 </table>
 </form>
+<span style="font-family: verdana,arial; font-size: 1.00em; font-weight:bold;" class = 'center'> New User? click <a href="http://localhost:8080/NetSecWebFiles/newuser.php"> here </a> for registration!!!</span>
 </div></div></div>
-
 </body>
 </html>
